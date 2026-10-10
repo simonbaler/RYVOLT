@@ -46,8 +46,8 @@ If you prefer to configure the service manually in the Render UI:
 | **Region** | Oregon (US West) or your nearest region |
 | **Branch** | `main` |
 | **Runtime** | `Node` |
-| **Build Command** | `npm install && npm run build` |
-| **Start Command** | `npm start` |
+| **Build Command** | `bun install && bun run build` (or `npm install && npm run build`) |
+| **Start Command** | `bun server.ts` (or `node --experimental-strip-types server.ts`) |
 | **Instance Type** | Free or Starter |
 
 4. Scroll down to **Advanced** -> **Health Check Path**:
@@ -67,6 +67,7 @@ Configure these in the Render **Environment** tab:
 | :--- | :--- | :--- |
 | `NODE_VERSION` | Node.js version | `22.14.0` (also specified in `.node-version`) |
 | `NODE_ENV` | Environment mode | `production` |
+| `NODE_OPTIONS` | Node CLI options for TS strip types | `--experimental-strip-types` (required if running with `node server.ts`) |
 | `VITE_SUPABASE_URL` | Your Supabase project URL | `https://xyzproject.supabase.co` |
 | `VITE_SUPABASE_ANON_KEY` | Supabase publishable anon key | `eyJhbGciOi...` |
 
