@@ -114,6 +114,24 @@ npm run build
 ```
 Creates an optimized production bundle in `dist/`.
 
+### 5. Production Start
+```bash
+npm start
+```
+Starts the production server (`node server.ts`) serving the Express API and built frontend.
+
+---
+
+## Deploying to Render (render.com)
+
+RYVOLT is fully pre-configured for **Render** as a full-stack Node.js Web Service:
+
+- **1-Click Blueprint**: Point Render to your repository; it automatically picks up `render.yaml` with build (`npm install && npm run build`), start (`npm start`), and health check (`/api/health`).
+- **Node 22 Support**: Uses `.node-version` (22.14.0) and `"engines"` in `package.json` for modern native TypeScript execution.
+- **Health Check**: Automated uptime monitoring configured at `/api/health`.
+
+For full step-by-step setup and environment variable instructions, see **[RENDER_DEPLOYMENT.md](RENDER_DEPLOYMENT.md)**.
+
 ---
 
 ## Nine-Phase Product Roadmap

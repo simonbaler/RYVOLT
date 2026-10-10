@@ -1,4 +1,5 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -1314,9 +1315,19 @@ app.post('/api/auth/phone/verify-otp', async (req: Request, res: Response) => {
 
 
 
+// API 404 handler - prevents unhandled API requests from falling through to the SPA index.html
+app.all('/api/*', (_req: Request, res: Response) => {
+  res.status(404).json({
+    error: 'API endpoint not found',
+    service: 'RYVOLT Enterprise Server',
+  });
+});
+
 // Setup Vite middleware in development or static serving in production
 async function startServer() {
   const isProd = process.env.NODE_ENV === 'production';
+  const host = process.env.HOST || '0.0.0.0';
+  const serverPort = Number(process.env.PORT) || 3000;
 
   if (!isProd) {
     const { createServer } = await import('vite');
@@ -1333,9 +1344,26 @@ async function startServer() {
     });
   }
 
-  app.listen(port, () => {
-    console.log(`RYVOLT server listening on http://localhost:${port}`);
+  const server = app.listen(serverPort, host, () => {
+    console.log(`[RYVOLT] Server ready on http://${host}:${serverPort} (mode: ${isProd ? 'production' : 'development'})`);
   });
+
+  // Graceful shutdown handling for container orchestrators (Render, Cloud Run, Docker)
+  const shutdown = (signal: string) => {
+    console.log(`[RYVOLT] Received ${signal}. Shutting down gracefully...`);
+    server.close(() => {
+      console.log('[RYVOLT] HTTP server closed.');
+      process.exit(0);
+    });
+    // Force shutdown after 10s if connections remain open
+    setTimeout(() => {
+      console.error('[RYVOLT] Forced shutdown after timeout.');
+      process.exit(1);
+    }, 10000).unref();
+  };
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 }
 
 startServer().catch((err) => {
