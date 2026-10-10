@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix RYVOLT — Build. Prove. Rise.",
+  "description": "The career intelligence platform that connects project execution, verified skill evidence, and real opportunities for candidates and recruiters.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
